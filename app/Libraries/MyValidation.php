@@ -12,6 +12,10 @@ class MyValidation
     //var_dump($str);
     //var_dump($field);
 		//var_dump($data);
+
+		if(empty($str)) {
+			return true;
+		}
 		
 		list($table, $column) =  explode('.', $field);
 

@@ -37,7 +37,7 @@ create VirtualHost
 
 ejecute apache enable
 ```
-sudo a2ensite mage.com.conf
+sudo a2ensite misite.com.conf
 sudo a2ensite test.com.conf
 
 ```
@@ -50,7 +50,7 @@ C:\Windows\System32\drivers\etc\hosts
 
 How to benchmark an HTTP/HTTPS service using AB (Apache Benchmark) command line tool
 ```
-ab -n 10000 -c 50 http://localhost:8081/v1/clients
+ab -n 20000 -c 150 http://misite.com/
 
 bombardier -c 125 -n 20000 http://misite.com/
 

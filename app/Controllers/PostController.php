@@ -21,14 +21,12 @@ class PostController extends BaseController
 	{
 		$db  = db_connect();
 
-		$field = $this->request->getGet();
 
-		//var_dump($field['where']);
-		$where   = (string) @$field['where'];
-		$order   = (string) @$field['order'];
-		$orderby = (string) @$field['orderby'];
-		$limit   = (int) @$field['limit'];
-		$offset  = (int) @$field['offset'];
+		$where   = $this->request->getGet('where');
+		$order   = $this->request->getGet('order');
+		$orderby = $this->request->getGet('orderby');
+		$limit   = (int) $this->request->getGet('limit');
+		$offset  = (int) $this->request->getGet('offset');
 		
 		$select = [
 			'post_id',
@@ -63,7 +61,7 @@ class PostController extends BaseController
 		}
 
 		# LIMIT
-		if((int) $offset >= 0 && (int) $limit > 0) {
+		if($offset >= 0 && $limit > 0) {
 			$offset = ($limit * $offset) - $limit;
 			$sql .= " LIMIT {$limit}  OFFSET {$offset} ";
 		}
