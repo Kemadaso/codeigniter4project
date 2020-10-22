@@ -32,7 +32,7 @@ class Terms extends Migration
 					'type'           => 'INT',
 					'null'           => true,
 				],
-				'term_orden' => [
+				'term_order' => [
 					'type'           => 'INT',
 					'null'           => true,
 				],

@@ -17,6 +17,15 @@ class Test extends BaseController
     var_dump($activeUsers);
     
     echo "ahurrid";
+    }
+    
+    public function bechmark()
+	{
+    
+    
+    
+        echo "ahurrid";
+
 	}
 
 	//--------------------------------------------------------------------

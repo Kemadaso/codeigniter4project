@@ -61,4 +61,45 @@ class User extends Model
     ];
 
 
+    public function updateterm(array $term, string $tax, int $post_id)
+    {
+      
+      $db  = $this->db;
+
+      if($tax) {
+        
+        $db->query("
+        DELETE term_relationships FROM term_relationships
+          LEFT JOIN terms
+              ON terms.term_id = term_relationships.term_id
+          WHERE
+              term_relationships.post_id = {$post_id} AND terms.taxonomy = '{$tax}' 
+        ");
+
+      }
+     
+
+      $terms = [];
+      if(is_array($term) && count($term)>0) {
+        foreach($term as $slug => $tax) {
+          $terms[] = "(t.term_slug = '{$slug}' AND t.taxonomy = '{$tax}')";
+        }
+      }
+
+      $terms = join(' OR ', $terms);
+
+      $sql = "
+      INSERT INTO term_relationships (term_id, post_id)
+        SELECT t.term_id, {$post_id} FROM terms t
+        WHERE {$terms} ";
+
+      try {
+        return $db->query($sql);
+      } catch (\Exception $e) {
+        return [];
+      }
+
+    }
+
+
 }

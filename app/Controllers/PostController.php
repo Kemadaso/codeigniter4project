@@ -45,7 +45,7 @@ class PostController extends BaseController
 		];
 
 		
-		$sql = " SELECT ".join(',', $select)." FROM users ";
+		$sql = " SELECT ".join(',', $select)." FROM posts ";
 
 		//var_dump(parse_querywhere($where));
 		
@@ -63,7 +63,6 @@ class PostController extends BaseController
 		}
 
 		# LIMIT
-
 		if((int) $offset >= 0 && (int) $limit > 0) {
 			$offset = ($limit * $offset) - $limit;
 			$sql .= " LIMIT {$limit}  OFFSET {$offset} ";
@@ -87,13 +86,10 @@ class PostController extends BaseController
 		
 		if(is_numeric($param)) {
 			#user_id
-			$res = $this->user->find($param);
-		} elseif (is_email($param)) {
-			#email
-			$res = $this->user->where('email', $param)->first();
+			$res = $this->post->find($param);
 		} else {
-			#nickname
-			$res = $this->user->where('nickname', $param)->first();
+			#email
+			$res = $this->post->where('post_slug', $param)->first();
 		}
 
 		if($res) {
@@ -110,14 +106,14 @@ class PostController extends BaseController
 		$field = $this->request->getPost();
 		//$pass_has = do_password($field['password']);
 		$data = [
-			'nickname'         => $field['nickname'],
-			'is_active'        => 1,
-			'email'            => $field['email'],
-			'email_token'      => do_password($field['email']),
-			'password'         => do_password($field['password']),
-			'repassword'       => do_password($field['repassword']),       
-			'roles'            => do_json($field),
-			'group_permission' => 'admin',
+			'post_title'     => 'asdasd',
+			'post_slug'      => 'wwqw',
+			'post_type'      => 'movie',
+			'post_content'   => 'asdasdasd asdasd',
+			'post_status'    => 'publish',
+			'post_user'      => 1,       
+			'comment_status' => 'active',
+			'comment_count'  => '10',
 		];
 		
 		//$this->user->insert($data);
@@ -125,15 +121,27 @@ class PostController extends BaseController
 
 		//$data['password'] = do_password($data['password']);
 		//unset($data['repassword']);
-		if($id = $this->user->insert($data)) {
-			return $this->respond($this->user->find($id), 200);
-		} else {
-			return $this->respond($this->user->errors(), 200);
-		}
-			
 
+		if($id = $this->post->insert($data)) {
+		
+			$post =  $this->post->find($id);
+
+			$this->post->updateterm(@$field['terms']['genero'], 'genero', $post['post_id']);
+			$this->post->updateterm(@$field['terms']['calidad'], 'calidad', $post['post_id']);
+			$this->post->updateterm(@$field['terms']['audio'], 'audio', $post['post_id']);
+
+			return $this->respond($post, 200);
+
+		} else {
+			return $this->respond($this->post->errors(), 200);
+		}
+
+
+		
+		
 
 	}
+
 
 	public function update($id)
 	{

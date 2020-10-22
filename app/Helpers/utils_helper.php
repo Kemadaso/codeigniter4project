@@ -95,3 +95,27 @@ function parse_queryuri($str) {
 
 }
 
+
+function getBody() {
+  
+  $request = \Config\Services::request();
+  $input = (array) json_decode($request->getBody(), true);
+
+  return $input;
+
+}
+
+function _noempty($str) {
+
+  $str = (array) $str;
+  
+  if(count($str) > 0) {
+    return true;
+  }
+
+  return false;
+
+}
+
+
+
