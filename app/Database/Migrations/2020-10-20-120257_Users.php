@@ -2,6 +2,7 @@
 
 use CodeIgniter\Database\Migration;
 
+//comment
 class Users extends Migration
 {
 	public function up()
@@ -67,5 +68,6 @@ class Users extends Migration
 	public function down()
 	{
 		$this->forge->dropTable('users');
+		//$this->forge->dropTable('users');
 	}
 }
