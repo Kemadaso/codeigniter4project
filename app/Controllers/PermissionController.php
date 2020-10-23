@@ -35,10 +35,10 @@ class PermissionController extends BaseController
 		
 		if(is_numeric($param)) {
 			#user_id
-			$res = $this->term->find($param);
+			$res = $this->permission->find($param);
 		} else {
 			#nickname
-			$res = $this->term->where('term_slug', $param)->first();
+			$res = $this->permission->where('name', $param)->first();
 		}
 
 		if($res) {
@@ -51,34 +51,39 @@ class PermissionController extends BaseController
 
 	public function create()
 	{
-		
-		$field = $this->request->getPost('term_parent');
-		//$pass_has = do_password($field['password']);
+    
+    
+    $config_roles = config('Config\\Pager');
+    
+    $data = [
+      "name"  => $this->request->getPost('name'),
+      "roles" => $this->request->getPost('narolesme'),
+    ];
 
-		//die(var_dump($field));
+    foreach($data['roles'] as $k => $rol) {
+      if(array_key_exists($rol, $config_roles->roles)) {
+        //throw new \Exception('valor no encontrado');
+      }
+    }
 
-		$data = [
-			'taxonomy'    => $this->request->getPost('taxonomy'),
-			'term_name'   => $this->request->getPost('term_name'),
-			'term_slug'   => $this->request->getPost('term_slug'),
-			//'term_parent' => $this->request->getPost('term_parent'),
-			'term_order'  => $this->request->getPost('term_order'),
-			'term_status' => $this->request->getPost('term_status'),
-		];
+    $data['roles'] = json_encode($data['roles']);
 
-		if(!empty($this->request->getPost('term_parent'))) {
-			$data['term_parent'] = $this->request->getPost('term_parent');
-		}
+		if($id = $this->permission->insert($data)) {
+      $rol = $this->permission->find($id);
 
-
-		if($id = $this->term->insert($data)) {
-			return $this->respond($this->term->find($id), 200);
+      //$toarray = (array) json_decode($rol['roles'], true);
+      $rol['roles'] = (array) json_decode($rol['roles'], true);
+      /*
+      if($toarray == null) {
+        $rol['roles'] = [];
+      }*/
+      
+      return $this->respond($rol, 200);
+      
 		} else {
-			return $this->respond($this->term->errors(), 200);
+			return $this->respond($this->permission->errors(), 200);
 		}
 			
-
-
 	}
 
 	public function update($id)
@@ -86,37 +91,44 @@ class PermissionController extends BaseController
 		
 		$field = getBody();
 		
-    if($term = $this->term->find($id)) {
+    if($rol = $this->permission->find($id)) {
 
-      if($term['term_name'] == @$field['term_name']) {
-        unset($field['term_name']);
+      //$toarray = (array) json_decode($rol['roles'], true);
+      $rol['roles'] = (array) json_decode($rol['roles'], true);
+      /*
+      if($toarray == null) {
+        $rol['roles'] = [];
+      }*/
+
+      if($rol['name'] == @$field['name']) {
+        unset($field['name']);
       }
 
-      if($term['term_slug'] == @$field['term_slug']) {
-        unset($field['term_slug']);
-			}
-			
-			if($term['term_parent'] == @$field['term_parent']) {
-        unset($field['term_parent']);
-			}
-			
-			if($term['term_order'] == @$field['term_order']) {
-        unset($field['term_order']);
-			}
-			
-			if($term['term_status'] == @$field['term_status']) {
-        unset($field['term_status']);
+      if($rol['roles'] == @$field['roles']) {
+        unset($field['roles']);
       }
-			
+      
       if(empty($field)) {
-				return $this->respond($term, 200);
+				return $this->respond($rol, 200);
 			}
+			
+			
+			if($id = $this->permission->update($id, $field)) {
+        
+        $rol = $this->permission->find($id);
+        
+        //$toarray = (array) json_decode($rol['roles'], true);
+        $rol['roles'] = (array) json_decode($rol['roles'], true);
+        /*
+        if($toarray == null) {
+          $rol['roles'] = [];
+        }*/
 
-			if($this->term->update($id, $field)) {
-				return $this->respond($this->term->find($id), 200);
-			} else {
-				return $this->respond($this->term->errors(), 200);
-			}
+        return $this->respond($rol, 200);
+        
+      } else {
+        return $this->respond($this->permission->errors(), 200);
+      }
       
     } else {
       return $this->respond(['error' => 'id no exists'], 200);
