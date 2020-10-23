@@ -7,6 +7,17 @@ class Users extends Migration
 {
 	public function up()
 	{
+		/*
+		
+		'length'         => '',
+		'unsigned'       => '',
+		'null'           => '',
+		'unique'         => '',
+		'default'        => '',
+		'auto_increment' => '',
+
+		*/
+		
 		$this->forge->addField([
 				'user_id'          => [
 					'type'           => 'INT',

@@ -35,6 +35,7 @@ class Terms extends Migration
 				'term_order' => [
 					'type'           => 'INT',
 					'null'           => true,
+					'default'        => 0,
 				],
 				'term_status' => [
 					'type'           => 'VARCHAR',

@@ -17,7 +17,7 @@ class TaxonomyController extends BaseController
 
 	}
 	
-	public function all()
+	public function index()
 	{
     $db  = db_connect();
     
@@ -103,7 +103,8 @@ class TaxonomyController extends BaseController
 	{
 		
 		if($id = $this->taxonomy->find($id)) {
-			return $this->respond(['success' => true], 200);
+			$delete = $this->taxonomy->delete($id);
+			return $this->respond(['success' => true, 'action' => $delete], 200);
 		} else {
 			return $this->respond(['success' => false], 200);
     }

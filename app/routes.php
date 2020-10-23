@@ -27,17 +27,23 @@ $routes->group('api', function($routes)
 
 
 
-  $routes->get('taxonomys/all',           'TaxonomyController::all');
+  $routes->get('taxonomys',               'TaxonomyController::index');
   $routes->get('taxonomys/(:segment)',    'TaxonomyController::show/$1');
   $routes->post('taxonomys',              'TaxonomyController::create');
   $routes->put('taxonomys/(:segment)',    'TaxonomyController::update/$1');
   $routes->delete('taxonomys/(:segment)', 'TaxonomyController::delete/$1');
 
 
-  $routes->get('terms/all',           'TermController::all');
+  $routes->get('terms',               'TermController::index');
   $routes->get('terms/(:segment)',    'TermController::show/$1');
   $routes->post('terms',              'TermController::create');
   $routes->put('terms/(:segment)',    'TermController::update/$1');
   $routes->delete('terms/(:segment)', 'TermController::delete/$1');
+
+  $routes->get('permissions',               'PermissionController::index');
+  $routes->get('permissions/(:segment)',    'PermissionController::show/$1');
+  $routes->post('permissions',              'PermissionController::create');
+  $routes->put('permissions/(:segment)',    'PermissionController::update/$1');
+  $routes->delete('permissions/(:segment)', 'PermissionController::delete/$1');
 
 });

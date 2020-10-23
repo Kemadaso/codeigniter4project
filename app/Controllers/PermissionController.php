@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use CodeIgniter\API\ResponseTrait;
 
-class TermController extends BaseController
+class PermissionController extends BaseController
 {
 	
 	use ResponseTrait;
@@ -13,21 +13,22 @@ class TermController extends BaseController
 		// call Grandpa's constructor
 		//parent::__construct();
 		helper('utils');
-		$this->term = model('App\Models\Term');
+		$this->permission = model('App\Models\Permission');
 
 	}
 	
 	public function index()
 	{
     $db  = db_connect();
-    
-		$field = $this->request->getGet('taxonomy');
 		
-		$sql = "SELECT * FROM terms WHERE taxonomy = ? ";
+		$tax = $this->request->getGet('taxonomy');
+		
+		$sql = " SELECT * FROM terms WHERE taxonomy = ? ";
 
 		try {
 			
-			$res = $db->query($sql, [$field])->getResult('array');
+			$res = $db->query($sql, [$tax])->getResult('array');
+
 			$res = filter_term_nested($res);
 
 			return $this->respond($res);
@@ -43,10 +44,10 @@ class TermController extends BaseController
 		
 		if(is_numeric($param)) {
 			#user_id
-			$res = $this->permission->find($param);
+			$res = $this->term->find($param);
 		} else {
 			#nickname
-			$res = $this->permission->where('term_slug', $param)->first();
+			$res = $this->term->where('term_slug', $param)->first();
 		}
 
 		if($res) {
