@@ -20,19 +20,10 @@ class PermissionController extends BaseController
 	public function index()
 	{
     $db  = db_connect();
-		
-		$tax = $this->request->getGet('taxonomy');
-		
-		$sql = " SELECT * FROM terms WHERE taxonomy = ? ";
-
-		try {
-			
-			$res = $db->query($sql, [$tax])->getResult('array');
-
-			$res = filter_term_nested($res);
-
+    
+		if($res = $this->permission->findAll()) {
 			return $this->respond($res);
-		} catch (\Exception $e) {
+		} else {
 			return $this->respond([]);
 		}
 
